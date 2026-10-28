@@ -20,7 +20,7 @@ const Motorista = db.define('motorista',{
         allowNull:false
     },
     telefone:{
-        type:DataTypes.STRING(100),
+        type:DataTypes.STRING(20),
         allowNull:false
     }
 },{

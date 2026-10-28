@@ -1,7 +1,7 @@
 const {DataTypes} = require('sequelize')
 const db = require('../db/conn')
 
-const Carga = db.define('Carga',{
+const Carga = db.define('carga',{
     codCarga:{
         type:DataTypes.INTEGER,
         primaryKey:true,
@@ -21,7 +21,8 @@ const Carga = db.define('Carga',{
     },
     codRastreio:{
         type:DataTypes.INTEGER,
-        allowNull:false
+        allowNull:false,
+        unique:true
     },
     idMotorista:{
         type:DataTypes.INTEGER,

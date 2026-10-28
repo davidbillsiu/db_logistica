@@ -1,0 +1,270 @@
+### 1. Cadastrar Funcionário sem senha (Deve retornar erro 400)
+POST http://localhost:3000/funcionario
+Content-Type: application/json
+
+{
+    "nome": "Teste Sem Senha",
+    "email": "erro@gmail.com"
+}
+
+### 2. Cadastrar Funcionário 1 - Carlos (Público)
+POST http://localhost:3000/funcionario
+Content-Type: application/json
+
+{
+    "nome": "Carlos",
+    "email": "carlos@logistica.com",
+    "senha": "123"
+}
+
+### 3. Cadastrar Funcionário 2 - Fernanda (Público)
+POST http://localhost:3000/funcionario
+Content-Type: application/json
+
+{
+    "nome": "Fernanda",
+    "email": "fernanda@logistica.com",
+    "senha": "123"
+}
+
+### 4. Cadastrar Funcionário 3 - Paulo (Público)
+POST http://localhost:3000/funcionario
+Content-Type: application/json
+
+{
+    "nome": "Paulo",
+    "email": "paulo@logistica.com",
+    "senha": "123"
+}
+
+### 5. Fazer Login com Carlos (Armazena o token automaticamente)
+# @name loginReq
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "carlos@logistica.com",
+    "senha": "123"
+}
+
+### 6. Login com senha incorreta (Deve retornar 401)
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "carlos@logistica.com",
+    "senha": "errada"
+}
+
+### 7. Testar Rota Protegida Sem Token (Deve retornar erro 401)
+GET http://localhost:3000/motoristas
+
+### 8. Testar CPF com tamanho incorreto (Deve retornar erro 400)
+POST http://localhost:3000/motorista
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "nome": "Teste Tamanho CPF",
+    "cnh": "12345678900",
+    "cpf": "12345",
+    "telefone": "48900000000"
+}
+
+### 9. Cadastrar Motorista 1 - Marcos
+POST http://localhost:3000/motorista
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "nome": "Marcos",
+    "cnh": "12345678900",
+    "cpf": "12345678912",
+    "telefone": "48999998888"
+}
+
+### 10. Cadastrar Motorista 2 - Ana
+POST http://localhost:3000/motorista
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "nome": "Ana",
+    "cnh": "98765432100",
+    "cpf": "22233344455",
+    "telefone": "48988887777"
+}
+
+### 11. Cadastrar Motorista 3 - Roberto
+POST http://localhost:3000/motorista
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "nome": "Roberto",
+    "cnh": "11122233344",
+    "cpf": "98765432100",
+    "telefone": "48977776666"
+}
+
+### 12. Listar Todos os Motoristas (CNH e CPF descriptografados)
+GET http://localhost:3000/motoristas
+Authorization: {{loginReq.response.body.token}}
+
+### 13. Consultar Motorista por ID
+GET http://localhost:3000/motorista/1
+Authorization: {{loginReq.response.body.token}}
+
+### 14. Consultar Motorista por Nome
+GET http://localhost:3000/motorista/buscarNome/Marcos
+Authorization: {{loginReq.response.body.token}}
+
+### 15. Consultar Motorista por Nome Inexistente (Deve retornar 404)
+GET http://localhost:3000/motorista/buscarNome/Nome Inexistente
+Authorization: {{loginReq.response.body.token}}
+
+### 16. Atualizar Motorista 1
+PUT http://localhost:3000/motorista/1
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "nome": "Marcos",
+    "telefone": "48999990000"
+}
+
+### 17. Cadastrar Carga 1 (Marcos)
+POST http://localhost:3000/carga
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "descricao": "Caixas de eletrônicos",
+    "peso": 250.5,
+    "volume": 3.2,
+    "codRastreio": 100001,
+    "idMotorista": 1
+}
+
+### 18. Cadastrar Carga 2 (Ana)
+POST http://localhost:3000/carga
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "descricao": "Paletes de alimentos",
+    "peso": 800,
+    "volume": 10.5,
+    "codRastreio": 100002,
+    "idMotorista": 2
+}
+
+### 19. Cadastrar Carga 3 (Roberto)
+POST http://localhost:3000/carga
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "descricao": "Material de construção",
+    "peso": 1500,
+    "volume": 12,
+    "codRastreio": 100003,
+    "idMotorista": 3
+}
+
+### 20. Cadastrar Carga com motorista inexistente (Deve retornar 404)
+POST http://localhost:3000/carga
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "descricao": "Carga inválida",
+    "peso": 10,
+    "volume": 1,
+    "codRastreio": 100004,
+    "idMotorista": 999
+}
+
+### 21. Cadastrar Entrega 1 (Data: 25/10/2026 - Carga 1)
+POST http://localhost:3000/entrega
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "cidade": "Florianópolis",
+    "status": "TRANSITO",
+    "data": "2026-10-25",
+    "hora": "14:00:00",
+    "idCarga": 1
+}
+
+### 22. Cadastrar Entrega 2 (Data: 05/10/2026 - Carga 2)
+POST http://localhost:3000/entrega
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "cidade": "Curitiba",
+    "status": "ENTREGUE",
+    "data": "2026-10-05",
+    "hora": "10:30:00",
+    "idCarga": 2
+}
+
+### 23. Cadastrar Entrega 3 (Data: 15/10/2026 - Carga 3)
+POST http://localhost:3000/entrega
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "cidade": "Porto Alegre",
+    "status": "TRANSITO",
+    "data": "2026-10-15",
+    "hora": "16:00:00",
+    "idCarga": 3
+}
+
+### 24. Cadastrar Entrega com status inválido (Deve retornar 400)
+POST http://localhost:3000/entrega
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "cidade": "São Paulo",
+    "status": "PERDIDA",
+    "data": "2026-10-20",
+    "hora": "09:00:00",
+    "idCarga": 1
+}
+
+### 25. Atualizar Entrega 1 (Altera status para ENTREGUE e data para 30/10/2026)
+PUT http://localhost:3000/entrega/1
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "status": "ENTREGUE",
+    "data": "2026-10-30",
+    "hora": "15:30:00"
+}
+
+### 26. Atualizar Entrega Inexistente (Deve retornar erro 404)
+PUT http://localhost:3000/entrega/999
+Content-Type: application/json
+Authorization: {{loginReq.response.body.token}}
+
+{
+    "status": "ENTREGUE"
+}
+
+### 27. Listar Entregas Ordenadas por Data (Deve retornar a ordem: 05/10, 15/10 e 30/10)
+GET http://localhost:3000/entregas
+Authorization: {{loginReq.response.body.token}}
+
+### 28. Deletar Motorista Inexistente (Deve retornar 404)
+DELETE http://localhost:3000/motorista/999
+Authorization: {{loginReq.response.body.token}}
+
+### 29. Deletar Motorista 3 (Roberto)
+DELETE http://localhost:3000/motorista/3
+Authorization: {{loginReq.response.body.token}}

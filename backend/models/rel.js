@@ -27,4 +27,4 @@ Entrega.belongsTo(Carga,{
     allowNull:false
 })
 
-module.exports = {Funcionario,Entrega,Carga,Motorista}
+module.exports = {Funcionario,Motorista,Carga,Entrega}

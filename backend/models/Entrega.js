@@ -16,7 +16,7 @@ const Entrega = db.define('entrega',{
         allowNull:false
     },
     data:{
-        type:DataTypes.DATE,
+        type:DataTypes.DATEONLY,
         allowNull:false
     },
     hora:{
@@ -36,4 +36,4 @@ const Entrega = db.define('entrega',{
     tableName:'entregas'
 })
 
-module.exports = Entrega 
+module.exports = Entrega

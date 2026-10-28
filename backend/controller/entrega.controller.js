@@ -1,28 +1,30 @@
 const Entrega = require('../models/Entrega')
+const Carga = require('../models/Carga')
+
+const STATUS_VALIDOS = ['ENTREGUE','TRANSITO']
 
 const cadastrar = async(req,res)=>{
     const valores = req.body
 
-    if(!valores.cidade || !valores.status || !valores.data || !valores.hora){
-        return res.status(404).json({message:'Preencha todos os dados'})
+    if(!valores.cidade || !valores.status || !valores.data || !valores.hora || !valores.idCarga){
+        return res.status(400).json({message:'Todos os campos (cidade, status, data, hora, idCarga) são obrigatórios!'})
     }
-try{
-    await Entrega.create(valores)
-    return res.status(201).json({message:'dados cadastrados'})
-}catch(err){
-    return res.status(500).json({message:'erro ao cadastrar'})
-}
-}
 
-const listar = async(req,res)=>{
+    if(!STATUS_VALIDOS.includes(valores.status)){
+        return res.status(400).json({message:'Status inválido! Use ENTREGUE ou TRANSITO.'})
+    }
+
     try{
-        const entrega = await Entrega.findAll()
-        if(!entrega){
-            return res.status(404).json({message:'dados inexistentes'})
+        const carga = await Carga.findByPk(valores.idCarga)
+        if(!carga){
+            return res.status(404).json({message:'Carga informada não existe!'})
         }
-        return res.status(200).json(entrega)
+
+        const novaEntrega = await Entrega.create(valores)
+        return res.status(201).json({message:'Entrega registrada com sucesso!', entrega:novaEntrega})
     }catch(err){
-        return res.status(500).json({message:'Erro ao listar'})
+        console.error('Erro ao cadastrar entrega:',err)
+        return res.status(500).json({message:'Erro ao cadastrar entrega!'})
     }
 }
 
@@ -31,17 +33,48 @@ const atualizar = async(req,res)=>{
     const valores = req.body
 
     try{
-        const entrega = await Entrega.findAll(id)
-        
+        const entrega = await Entrega.findByPk(id)
         if(!entrega){
-            return res.status(404).json({message:'id inexistente'})
+            return res.status(404).json({message:'Entrega não encontrada!'})
         }
 
-        await Entrega.update(valores, {where:{codEntrega:id}})
-        return res.status(200).json({message:'dados atualizados'})
+        if(valores.status && !STATUS_VALIDOS.includes(valores.status)){
+            return res.status(400).json({message:'Status inválido! Use ENTREGUE ou TRANSITO.'})
+        }
+
+        if(valores.idCarga){
+            const carga = await Carga.findByPk(valores.idCarga)
+            if(!carga){
+                return res.status(404).json({message:'Carga informada não existe!'})
+            }
+        }
+
+        await Entrega.update(valores,{where:{codEntrega:id}})
+        return res.status(200).json({message:'Entrega atualizada com sucesso!'})
     }catch(err){
-        return res.status(500).json({message:'Erro ao atualizar'})
+        console.error('Erro ao atualizar entrega:',err)
+        return res.status(500).json({message:'Erro ao atualizar entrega!'})
     }
 }
 
-module.exports = {cadastrar, listar, atualizar}
+const listar = async(req,res)=>{
+    try{
+        const entregas = await Entrega.findAll({
+            order:[['data','ASC'],['hora','ASC']],
+            include:[
+                {
+                    model:Carga,
+                    as:'cargaEntrega',
+                    attributes:['codCarga','descricao','peso','volume','codRastreio']
+                }
+            ]
+        })
+
+        return res.status(200).json(entregas)
+    }catch(err){
+        console.error('Erro ao listar entregas:',err)
+        return res.status(500).json({message:'Erro ao listar entregas!'})
+    }
+}
+
+module.exports = {cadastrar, atualizar, listar}

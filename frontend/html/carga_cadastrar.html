@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style_cad.css">
+    <script src="../js/carga_cadastrar.js" defer></script>
+    <title>Cadastro de Carga</title>
+</head>
+<body>
+    <header>
+        <nav><a href="../index.html">Home</a></nav>
+        <br><hr><br>
+    </header>
+    <main>
+        <h1>Cadastrar Carga</h1>
+        <form>
+            <label for="descricao">Descrição</label><br>
+            <input type="text" id="descricao" required><br><br>
+            <label for="peso">Peso (kg)</label><br>
+            <input type="number" id="peso" step="any" required><br><br>
+            <label for="volume">Volume (m³)</label><br>
+            <input type="number" id="volume" step="any" required><br><br>
+            <label for="codRastreio">Código de Rastreio (numérico)</label><br>
+            <input type="number" id="codRastreio" required><br><br>
+            <label for="idMotorista">Código do Motorista</label><br>
+            <input type="number" id="idMotorista" required><br><br>
+            <button id="btn_cadastrar">Cadastrar</button>
+        </form>
+        <div id="resposta" class="resposta"></div>
+    </main>
+</body>
+</html>

@@ -6,21 +6,23 @@ const cadastrar = async(req,res)=>{
     const valores = req.body
 
     if(!valores.nome || !valores.email || !valores.senha){
-        return res.status(404).json({message:'Preencha todos os dados'})
+        return res.status(400).json({message:'Todos os campos (nome, email, senha) são obrigatórios!'})
     }
 
     try{
-        const senhaCriptografado = cryptoJs.AES.encrypt(valores.senha,CHAVE_SECRETA).toString()
+        const senhaCriptografada = cryptoJs.AES.encrypt(valores.senha,CHAVE_SECRETA).toString()
 
         await Funcionario.create({
             nome:valores.nome,
             email:valores.email,
-            senha:senhaCriptografado
+            senha:senhaCriptografada
         })
-        return res.status(201).json({message:'Dados Cadastrados com sucesso'})
+
+        return res.status(201).json({message:'Funcionário cadastrado com sucesso!'})
     }catch(err){
-        return res.status(500).json({message:'Erro ao cadastrar'})
+        console.error('Erro ao cadastrar funcionário:',err)
+        return res.status(500).json({message:'Erro ao cadastrar funcionário!'})
     }
 }
 
-module.exports = Funcionario
+module.exports = {cadastrar}
